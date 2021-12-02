@@ -8,7 +8,7 @@ import java.util.Stack;
 /* A version of the solitaire game "Poker Squares" with variable point systems.
  * Author: Todd W. Neller
 
-Notes: 
+Notes:
 
 A Poker Squares grid is represented as a 5-by-5 array of Card objects.  A null indicates an empty position.
 In the solitaire game of Poker Squares, a deck is initially shuffled.
@@ -30,8 +30,8 @@ The player's total score is the sum of the scores for each of the 10 row and col
 
 For our purposes, a player is considered better if it has a higher expected game score, i.e. has a higher score average over many games.
 
-In our implementation, each turn a PokerSquaresPlayer will be passed (1) a Card object and (2) the number of milliseconds remaining in the game, 
-and will return a length 2 integer array with the row and column the player placed the card.  In the event that the player makes an illegal 
+In our implementation, each turn a PokerSquaresPlayer will be passed (1) a Card object and (2) the number of milliseconds remaining in the game,
+and will return a length 2 integer array with the row and column the player placed the card.  In the event that the player makes an illegal
 play or "times out", i.e. runs out of time for play, the player loses with a final score of 10 times the minimum hand score.
 
 This file contains not only the code to run a simple demonstration game with a random player, but also code to perform batch game testing,
@@ -44,7 +44,7 @@ and tournament evaluation.
 public class PokerSquares {
 
 	public static final int SIZE = 5; // square grid size
-	public static final long POINT_SYSTEM_MILLIS = 10000L; 
+	public static final long POINT_SYSTEM_MILLIS = 10000L;
 	public static final long GAME_MILLIS = 30000L; // a total of 30 seconds (30000 milliseconds) per game
 
 	private PokerSquaresPlayer player; // current player
@@ -57,6 +57,7 @@ public class PokerSquares {
 
 	/**
 	 * Create a PokerSquares game with a given player and point system.
+	 *
 	 * @param player Poker Squares player object
 	 * @param system current Poker Squares point system
 	 */
@@ -86,6 +87,7 @@ public class PokerSquares {
 
 	/**
 	 * Play a game of Poker Squares and return the final game score.
+	 *
 	 * @return final game score
 	 */
 	public int play() {
@@ -115,7 +117,8 @@ public class PokerSquares {
 					System.err.println("Player Out of Time");
 					return minPoints;
 				}
-				if (play.length != 2 || play[0] < 0 || play[0] >= SIZE || play[1] < 0 || play[1] >= SIZE || grid[play[0]][play[1]] != null) { // illegal play
+				if (play.length != 2 || play[0] < 0 || play[0] >= SIZE || play[1] < 0 || play[1] >= SIZE
+						|| grid[play[0]][play[1]] != null) { // illegal play
 					System.err.printf("Illegal play: %s\n", Arrays.toString(play));
 					return minPoints;
 				}
@@ -127,20 +130,19 @@ public class PokerSquares {
 				}
 			}
 			return system.getScore(grid);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Exception thrown by " + player.getName() + ":");
 			e.printStackTrace();
 			return minPoints;
 		}
 	}
 
-
 	/**
 	 * Play a sequence of games, collecting and reporting statistics.
-	 * @param numGames number of games to play
+	 *
+	 * @param numGames  number of games to play
 	 * @param startSeed seed of first game. Successive games use successive seeds
-	 * @param verbose whether or not to provide verbose output of game play
+	 * @param verbose   whether or not to provide verbose output of game play
 	 * @return integer array of game scores
 	 */
 	public int[] playSequence(int numGames, long startSeed, boolean verbose) {
@@ -156,8 +158,10 @@ public class PokerSquares {
 			int score = play();
 			scores[i] = score;
 			scoreMean += score;
-			if (scores[i] < min) min = scores[i];
-			if (scores[i] > max) max = scores[i];
+			if (scores[i] < min)
+				min = scores[i];
+			if (scores[i] > max)
+				max = scores[i];
 			System.out.println(score);
 		}
 		scoreMean /= numGames;
@@ -167,29 +171,35 @@ public class PokerSquares {
 			scoreStdDev += diff * diff;
 		}
 		scoreStdDev = Math.sqrt(scoreStdDev / numGames);
-		System.out.printf("Score Mean: %f, Standard Deviation: %f, Minimum: %d, Maximum: %d\n", scoreMean, scoreStdDev, min, max);
+		System.out.printf("Score Mean: %f, Standard Deviation: %f, Minimum: %d, Maximum: %d\n", scoreMean, scoreStdDev, min,
+				max);
 		return scores;
 	}
 
 	/**
-	 * Hold a Poker Squares tournament between the given players and point systems, the number of games played by 
-	 * each player with each point system, and the start seed determining the sequence of deals all will encounter, 
-	 * returning an array of doubles corresponding to the tournament score of each player.
-	 * Tournament scores are determined as follows. For each tournament, average scores are linearly scaled and 
-	 * transformed such that the player with the maximum or minimum average score receive a tournament score of 
-	 * 1.0 or 0.0 respectively, with all other players receiving linearly scaled tournament scores between 0.0 and 1.0.
-	 * For each scoring system, a player receives a tournament score, and in the ith position of the return array is
-	 * the sum of all tournament scores of the ith player.
-	 * @param players Poker Squares players taking part in the tournament
-	 * @param systems Poker Squares point systems used to evaluate players in the tournament
-	 * @param gamesPerSystem the number of games that will be played by each player with each point system
-	 * @param startSeed the start seed for the pseudorandom number generator that generates card deals
+	 * Hold a Poker Squares tournament between the given players and point systems,
+	 * the number of games played by each player with each point system, and the
+	 * start seed determining the sequence of deals all will encounter, returning an
+	 * array of doubles corresponding to the tournament score of each player.
+	 * Tournament scores are determined as follows. For each tournament, average
+	 * scores are linearly scaled and transformed such that the player with the
+	 * maximum or minimum average score receive a tournament score of 1.0 or 0.0
+	 * respectively, with all other players receiving linearly scaled tournament
+	 * scores between 0.0 and 1.0. For each scoring system, a player receives a
+	 * tournament score, and in the ith position of the return array is the sum of
+	 * all tournament scores of the ith player.
+	 *
+	 * @param players        Poker Squares players taking part in the tournament
+	 * @param systems        Poker Squares point systems used to evaluate players in
+	 *                       the tournament
+	 * @param gamesPerSystem the number of games that will be played by each player
+	 *                       with each point system
+	 * @param startSeed      the start seed for the pseudorandom number generator
+	 *                       that generates card deals
 	 * @return the sum of the tournament scores for each of the given players
 	 */
-	public static double[] playTournament(
-			ArrayList<PokerSquaresPlayer> players,
-			ArrayList<PokerSquaresPointSystem> systems,
-			int gamesPerSystem, long startSeed) {
+	public static double[] playTournament(ArrayList<PokerSquaresPlayer> players,
+			ArrayList<PokerSquaresPointSystem> systems, int gamesPerSystem, long startSeed) {
 		double[] tournamentScores = new double[players.size()];
 		for (PokerSquaresPointSystem system : systems) { // for each point system
 			System.out.println("Point System:\n" + system);
@@ -208,7 +218,7 @@ public class PokerSquares {
 				if (totalScore > maxTotal)
 					maxTotal = totalScore;
 				if (totalScore < minTotal)
-					minTotal = totalScore;				
+					minTotal = totalScore;
 			}
 			for (int i = 0; i < players.size(); i++) { // for each player
 				double normalizedTotal = (double) (totalScores[i] - minTotal) / (maxTotal - minTotal);
@@ -231,49 +241,49 @@ public class PokerSquares {
 
 	/**
 	 * Set the seed of the game pseudorandom number generator.
+	 *
 	 * @param seed pseudorandom number generator seed
 	 */
 	private void setSeed(long seed) {
 		random.setSeed(seed);
 	}
 
-
 	/**
-	 * Demonstrate single/batch game play testing and tournament evaluation of PokerSquaresPlayers.
+	 * Demonstrate single/batch game play testing and tournament evaluation of
+	 * PokerSquaresPlayers.
+	 *
 	 * @param args (not used)
 	 */
 	public static void main(String[] args) {
 
 		// Demonstration of single game play (30 seconds)
-//		System.out.println("Single game demo:");
-//		PokerSquaresPointSystem.setSeed(0L);
-//		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
-//		System.out.println(system);
-//		new PokerSquares(new RandomPlayer(), system).play();
-
-
+		// System.out.println("Single game demo:");
+		// PokerSquaresPointSystem.setSeed(0L);
+		// PokerSquaresPointSystem system =
+		// PokerSquaresPointSystem.getBritishPointSystem();
+		// System.out.println(system);
+		// new PokerSquares(new RandomPlayer(), system).play();
 
 		// Demonstration of batch game play (30 seconds per game)
-//		System.out.println("\n\nBatch game demo:");
-//		System.out.println(system);
-//		new PokerSquares(new RandomPlayer(), system).playSequence(3, 0, true);
+		// System.out.println("\n\nBatch game demo:");
+		// System.out.println(system);
+		// new PokerSquares(new RandomPlayer(), system).playSequence(3, 0, true);
 
+		// Demonstration of tournament evaluation (2 players, 3 point systems, 10 x 30s
+		// games for each of the 2*3=6 player-system pairs)
+		System.out.println("\n\nTournament evaluation demo:");
 
+		ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
+		players.add(new WetDogPlayer());
+		players.add(new RandomMCPlayer());
 
-                // Demonstration of tournament evaluation (2 players, 3 point systems, 10 x 30s games for each of the 2*3=6 player-system pairs)
-                System.out.println("\n\nTournament evaluation demo:");
+		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
+		PokerSquaresPointSystem.setSeed(42L);
+		systems.add(PokerSquaresPointSystem.getBritishPointSystem());
+		systems.add(PokerSquaresPointSystem.getAmericanPointSystem());
+		systems.add(PokerSquaresPointSystem.getSingleHandPointSystem(PokerHand.FLUSH.id)); // 1 point for flushes, 0 for all
+																																												// other hands
 
-                ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
-                players.add(new RandomPlayer());
-                players.add(new FlushPlayer());
-
-                ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
-                PokerSquaresPointSystem.setSeed(42L);
-                systems.add(PokerSquaresPointSystem.getBritishPointSystem());
-                systems.add(PokerSquaresPointSystem.getAmericanPointSystem());
-                systems.add(PokerSquaresPointSystem.getSingleHandPointSystem(PokerHand.FLUSH.id));  // 1 point for flushes, 0 for all other hands
-
-
-                PokerSquares.playTournament(players, systems, 20, 0L);  // play 20 games for each player under each scoring system
+		PokerSquares.playTournament(players, systems, 20, 0L); // play 20 games for each player under each scoring system
 	}
 }
