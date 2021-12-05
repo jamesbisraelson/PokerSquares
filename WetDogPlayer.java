@@ -265,7 +265,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	 */
 	@Override
 	public String getName() {
-		return "WetDogPlayer";
+		return "WetDogPlayerDepth" + this.depthLimit;
 	}
 
 	/**
