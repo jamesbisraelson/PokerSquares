@@ -280,9 +280,6 @@ public class PokerSquares {
 		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
 		PokerSquaresPointSystem.setSeed(42L);
 		systems.add(PokerSquaresPointSystem.getBritishPointSystem());
-		systems.add(PokerSquaresPointSystem.getAmericanPointSystem());
-		systems.add(PokerSquaresPointSystem.getSingleHandPointSystem(PokerHand.FLUSH.id)); // 1 point for flushes, 0 for all
-																																												// other hands
 
 		PokerSquares.playTournament(players, systems, 20, 0L); // play 20 games for each player under each scoring system
 	}

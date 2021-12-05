@@ -1,5 +1,12 @@
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.IOException;
+import java.lang.ClassNotFoundException;
 
 /**
  * WetDogPlayer: A simple Monte Carlo approach to a PokerSquares player. The
@@ -9,7 +16,7 @@ import java.util.Random;
  * Author: James Israelson
  */
 public class WetDogPlayer implements PokerSquaresPlayer {
-
+	public static final String FILENAME = "heuristic.wet";
 	private final int SIZE = 5; // number of rows/columns in square grid
 	private final int NUM_POS = SIZE * SIZE; // number of positions in square grid
 	private final int NUM_CARDS = Card.NUM_CARDS; // number of cards in deck
@@ -275,6 +282,70 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		PokerSquaresPointSystem system = PokerSquaresPointSystem.getAmeritishPointSystem();
 		System.out.println(system);
 		new PokerSquares(new WetDogPlayer(2), system).play(); // play a single game
+	}
+
+	public static void saveEncoding(HashMap<String, Double> encoding, String path) {
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
+			oos.writeObject(encoding);
+			oos.flush();
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static HashMap<String, Double> loadEncoding(String path) {
+		HashMap<String, Double> encoding = null;
+		try {
+			ObjectInputStream ios = new ObjectInputStream(new FileInputStream(path));
+			encoding = (HashMap<String, Double>) ios.readObject();
+			ios.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return encoding;
+	}
+
+	public static String getHandEncoding(Card[] hand, int numPlays) {
+		String encoding = numPlays + " ";
+		PokerHand achievedHand = PokerHand.getPokerHand(hand);
+		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
+
+		for (PossiblePokerHand possibleHand : possibleHands) {
+			if (possibleHand == PossiblePokerHand.STRAIGHT_FLUSH) {
+				String s = "f";
+				if (achievedHand == PokerHand.STRAIGHT_FLUSH) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+			if (possibleHand == PossiblePokerHand.STRAIGHT) {
+				String s = "s";
+				if (achievedHand == PokerHand.STRAIGHT) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+			if (possibleHand == PossiblePokerHand.FULL_HOUSE) {
+				String s = "h";
+				if (achievedHand == PokerHand.FULL_HOUSE) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+			if (possibleHand == PossiblePokerHand.FOUR_OF_A_KIND) {
+				String s = "k";
+				if (achievedHand == PokerHand.FOUR_OF_A_KIND) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+		}
+		return encoding;
 	}
 
 }
