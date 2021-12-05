@@ -30,7 +30,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	// positions.
 	private int numPlays = 0; // number of Cards played into the grid so far
 	private PokerSquaresPointSystem system; // point system
-	private int depthLimit = 2; // default depth limit for Random Monte Carlo (MC) play
+	private int depthLimit = 3; // default depth limit for Random Monte Carlo (MC) play
 	private Card[][] grid = new Card[SIZE][SIZE]; // grid with Card objects or null (for empty positions)
 	private Card[] simDeck = Card.getAllCards(); // a list of all Cards. As we learn the index of cards in the play deck,
 																								// we swap each dealt card to its correct index. Thus, from index
@@ -164,7 +164,6 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		} else { // up to the non-zero depth limit or to game end, iteratively make the given
 							// number of random plays
 			double score = Double.MIN_VALUE;
-			double maxScore = Double.MIN_VALUE;
 			int depth = Math.min(depthLimit, NUM_POS - numPlays); // compute real depth limit, taking into account game end
 			for (int d = 0; d < depth; d++) {
 				// generate a random card draw
@@ -265,7 +264,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	 */
 	@Override
 	public String getName() {
-		return "WetDogPlayer";
+		return "WetDogPlayerDepth" + this.depthLimit;
 	}
 
 	/**
@@ -276,7 +275,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	public static void main(String[] args) {
 		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
 		System.out.println(system);
-		new PokerSquares(new WetDogPlayer(3), system).play(); // play a single game
+		new PokerSquares(new WetDogPlayer(7), system).play(); // play a single game
 	}
 
 	public static void saveEncoding(HashMap<String, Double> encoding, String path) {
@@ -306,21 +305,29 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	}
 
 	public static String getHandEncoding(Card[] hand, int numPlays) {
-		String encoding = numPlays + " ";
+		String encoding = numPlays + ":";
 		PokerHand achievedHand = PokerHand.getPokerHand(hand);
 		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
 
+		if (achievedHand == PokerHand.ONE_PAIR) {
+			encoding += "p";
+		} else if (achievedHand == PokerHand.TWO_PAIR) {
+			encoding += "P";
+		}
+
 		for (PossiblePokerHand possibleHand : possibleHands) {
-			if (possibleHand == PossiblePokerHand.STRAIGHT_FLUSH) {
+			if (possibleHand == PossiblePokerHand.FLUSH) {
 				String s = "f";
-				if (achievedHand == PokerHand.STRAIGHT_FLUSH) {
+				if (achievedHand == PokerHand.FLUSH || achievedHand == PokerHand.ROYAL_FLUSH
+						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
 			}
 			if (possibleHand == PossiblePokerHand.STRAIGHT) {
 				String s = "s";
-				if (achievedHand == PokerHand.STRAIGHT) {
+				if (achievedHand == PokerHand.STRAIGHT || achievedHand == PokerHand.ROYAL_FLUSH
+						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
@@ -333,7 +340,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 				encoding += s;
 			}
 			if (possibleHand == PossiblePokerHand.FOUR_OF_A_KIND) {
-				String s = "k";
+				String s = "o";
 				if (achievedHand == PokerHand.FOUR_OF_A_KIND) {
 					s = s.toUpperCase();
 				}
