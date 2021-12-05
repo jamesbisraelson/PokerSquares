@@ -313,7 +313,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		for (PossiblePokerHand possibleHand : possibleHands) {
 			if (possibleHand == PossiblePokerHand.STRAIGHT_FLUSH) {
 				String s = "f";
-				if (achievedHand == PokerHand.STRAIGHT_FLUSH) {
+				if (achievedHand == PokerHand.STRAIGHT_FLUSH || achievedHand == PokerHand.ROYAL_FLUSH) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
