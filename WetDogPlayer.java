@@ -309,11 +309,10 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		PokerHand achievedHand = PokerHand.getPokerHand(hand);
 		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
 
-		if (achievedHand == PokerHand.ONE_PAIR) {
-			encoding += "p";
-		} else if (achievedHand == PokerHand.TWO_PAIR) {
-			encoding += "P";
-		}
+		/*
+		 * if (achievedHand == PokerHand.ONE_PAIR) { encoding += "p"; } else if
+		 * (achievedHand == PokerHand.TWO_PAIR) { encoding += "P"; }
+		 */
 
 		for (PossiblePokerHand possibleHand : possibleHands) {
 			if (possibleHand == PossiblePokerHand.FLUSH) {
