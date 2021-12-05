@@ -150,6 +150,9 @@ public enum PossiblePokerHand {
 				list[listCount] = PossiblePokerHand.STRAIGHT_FLUSH; // Straight Flush
 				listCount++;
 			}
+		} else if (straightPossible) {
+			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
+			listCount++;
 		}
 		if (numCards - maxOfAKind <= 1) {
 			list[listCount] = PossiblePokerHand.FOUR_OF_A_KIND; // Four of a Kind
@@ -159,11 +162,7 @@ public enum PossiblePokerHand {
 			list[listCount] = PossiblePokerHand.FULL_HOUSE; // Full House
 			listCount++;
 		}
-
-		if (straightPossible) {
-			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
-			listCount++;
-		} // TODO: decide if i want to track less than a straight
+		// TODO: decide if i want to track less than a straight
 		return list;
 	}
 

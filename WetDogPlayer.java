@@ -17,6 +17,7 @@ import java.lang.ClassNotFoundException;
  */
 public class WetDogPlayer implements PokerSquaresPlayer {
 	public static final String FILENAME = "heuristic.wet";
+	private HashMap<String, Double> heuristic;
 	private final int SIZE = 5; // number of rows/columns in square grid
 	private final int NUM_POS = SIZE * SIZE; // number of positions in square grid
 	private final int NUM_CARDS = Card.NUM_CARDS; // number of cards in deck
@@ -62,6 +63,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	 */
 	@Override
 	public void init() {
+		this.heuristic = loadEncoding(FILENAME);
 		// clear grid
 		for (int row = 0; row < SIZE; row++)
 			for (int col = 0; col < SIZE; col++)
@@ -116,7 +118,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 				long endTime = startTime + millisPerMoveEval; // compute when MC simulations should end
 				makePlay(card, play / SIZE, play % SIZE); // play the card at the empty position
 				int simCount = 0;
-				int scoreTotal = 0;
+				double scoreTotal = 0.0;
 				while (System.currentTimeMillis() < endTime) { // perform as many MC simulations as possible through the
 																												// allotted time
 					// Perform a Monte Carlo simulation of random play to the depth limit or game
@@ -126,7 +128,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 				}
 				undoPlay(); // undo the play under evaluation
 				// update (if necessary) the maximum average score and the list of best plays
-				double averageScore = (double) scoreTotal / simCount;
+				double averageScore = scoreTotal / simCount;
 				if (averageScore >= maxAverageScore) {
 					if (averageScore > maxAverageScore)
 						bestPlays.clear();
@@ -156,13 +158,13 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	 * @param depthLimit - how many simulated random plays to perform
 	 * @return resulting grid score after random MC simulation to given depthLimit
 	 */
-	private int simPlay(int depthLimit) {
+	private double simPlay(int depthLimit) {
 		if (depthLimit == 0) { // with zero depth limit, return current score
 			return system.getScore(grid);
 		} else { // up to the non-zero depth limit or to game end, iteratively make the given
 							// number of random plays
-			int score = Integer.MIN_VALUE;
-			int maxScore = Integer.MIN_VALUE;
+			double score = Double.MIN_VALUE;
+			double maxScore = Double.MIN_VALUE;
 			int depth = Math.min(depthLimit, NUM_POS - numPlays); // compute real depth limit, taking into account game end
 			for (int d = 0; d < depth; d++) {
 				// generate a random card draw
@@ -187,17 +189,17 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		}
 	}
 
-	private int getTotalHeuristicScore(Card[][] grid) {
-		int[] handHeuristicScores = getHeuristicScores(grid);
-		int totalHeuristicScore = 0;
+	private double getTotalHeuristicScore(Card[][] grid) {
+		double[] handHeuristicScores = getHeuristicScores(grid);
+		double totalHeuristicScore = 0.0;
 		for (int i = 0; i < handHeuristicScores.length; i++) {
 			totalHeuristicScore += handHeuristicScores[i];
 		}
 		return totalHeuristicScore;
 	}
 
-	private int[] getHeuristicScores(Card[][] grid) {
-		int[] handHeuristicScores = new int[2 * SIZE];
+	private double[] getHeuristicScores(Card[][] grid) {
+		double[] handHeuristicScores = new double[2 * SIZE];
 		for (int row = 0; row < SIZE; row++) {
 			Card[] hand = new Card[SIZE];
 			for (int col = 0; col < SIZE; col++)
@@ -213,17 +215,10 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		return handHeuristicScores;
 	}
 
-	private int getHandHeuristicScore(Card[] hand) {
-		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
-
-		int totalHandHeuristicScore = 0;
-		for (int i = 0; i < possibleHands.length; i++) {
-			// TODO: calculate by incrementing based on each possible hand type
-			if (possibleHands[i] != null) {
-				totalHandHeuristicScore += possibleHands[i].id;
-			}
-		}
-		return totalHandHeuristicScore;
+	private double getHandHeuristicScore(Card[] hand) {
+		String encoding = getHandEncoding(hand, this.numPlays);
+		double score = heuristic.getOrDefault(encoding, 0.0);
+		return score;
 	}
 
 	public void makePlay(Card card, int row, int col) {
@@ -279,9 +274,9 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	 * @param args (not used)
 	 */
 	public static void main(String[] args) {
-		PokerSquaresPointSystem system = PokerSquaresPointSystem.getAmeritishPointSystem();
+		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
 		System.out.println(system);
-		new PokerSquares(new WetDogPlayer(2), system).play(); // play a single game
+		new PokerSquares(new WetDogPlayer(3), system).play(); // play a single game
 	}
 
 	public static void saveEncoding(HashMap<String, Double> encoding, String path) {

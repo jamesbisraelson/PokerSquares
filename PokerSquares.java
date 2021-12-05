@@ -50,7 +50,7 @@ public class PokerSquares {
 	private PokerSquaresPlayer player; // current player
 	private PokerSquaresPointSystem system; // current point system
 	private long gameMillis = GAME_MILLIS; // maximum milliseconds for current game
-	private boolean verbose = true; // whether or not to print move-by-move transcript of the game
+	private boolean verbose = false; // whether or not to print move-by-move transcript of the game
 	private Card[][] grid = new Card[SIZE][SIZE]; // current game grid
 	private Random random = new Random(); // current game random number generator
 	private int minPoints; // minimum possible score for current point system.
@@ -275,12 +275,14 @@ public class PokerSquares {
 
 		ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
 		players.add(new WetDogPlayer());
-		players.add(new RandomMCPlayer());
+		// players.add(new RandomMCPlayer());
+		// players.add(new RandomPlayer());
+		players.add(new RandomPlayer());
 
 		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
-		PokerSquaresPointSystem.setSeed(42L);
+		PokerSquaresPointSystem.setSeed(19L);
 		systems.add(PokerSquaresPointSystem.getBritishPointSystem());
 
-		PokerSquares.playTournament(players, systems, 20, 0L); // play 20 games for each player under each scoring system
+		PokerSquares.playTournament(players, systems, 10, 0L); // play 20 games for each player under each scoring system
 	}
 }

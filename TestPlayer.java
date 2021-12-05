@@ -1,6 +1,7 @@
 import java.util.Collections;
 import java.util.Stack;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 class Heuristic {
@@ -29,7 +30,7 @@ class Heuristic {
 }
 
 public class TestPlayer implements PokerSquaresPlayer {
-  private HashMap<Card[], Integer> handsInGame = new HashMap<Card[], Integer>();
+  private Vector<String> handsInGame = new Vector<String>();
 
   private final int SIZE = 5;
   private Card[][] grid = new Card[SIZE][SIZE];
@@ -45,6 +46,7 @@ public class TestPlayer implements PokerSquaresPlayer {
   @Override
   public void init() {
     // clear grid
+    handsInGame.removeAllElements();
     for (int row = 0; row < SIZE; row++)
       for (int col = 0; col < SIZE; col++)
         grid[row][col] = null;
@@ -64,7 +66,7 @@ public class TestPlayer implements PokerSquaresPlayer {
     int row = play / 5;
     int col = play % 5;
     grid[row][col] = card;
-    addHandsToHashMap();
+    storeHands();
     int[] playPos = { row, col }; // decode it into row and column
     return playPos; // return it
   }
@@ -74,70 +76,77 @@ public class TestPlayer implements PokerSquaresPlayer {
     return "RandomPlayer";
   }
 
-  public void addHandsToHashMap() {
+  private void storeHands() {
     for (int row = 0; row < SIZE; row++) {
       Card[] hand = new Card[SIZE];
       for (int col = 0; col < SIZE; col++) {
         hand[col] = grid[row][col];
       }
-      handsInGame.put(hand, numPlays);
+      storeHand(hand, numPlays);
     }
     for (int col = 0; col < SIZE; col++) {
       Card[] hand = new Card[SIZE];
       for (int row = 0; row < SIZE; row++) {
         hand[row] = grid[row][col];
       }
-      handsInGame.put(hand, numPlays);
+      storeHand(hand, numPlays);
     }
   }
 
-  public HashMap<Card[], Integer> getHandsInGame() {
+  private void storeHand(Card[] hand, int numPlays) {
+    String encoding = WetDogPlayer.getHandEncoding(hand, numPlays);
+    this.handsInGame.add(encoding);
+  }
+
+  public Vector<String> getHandsInGame() {
     return this.handsInGame;
   }
 
   public static void main(String[] args) {
     int maxScore = 0;
-    HashMap<String, Heuristic> heuristicMap = new HashMap<String, Heuristic>();
-
+    HashMap<String, Heuristic> handEncodings = new HashMap<String, Heuristic>();
     TestPlayer train = new TestPlayer();
     PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
-    for (int j = 0; j < 100; j++) {
-      for (int i = 0; i < 1; i++) {
-        int score = new PokerSquares(train, system).play();
-        if (score > maxScore) {
-          maxScore = score;
-        }
-
-        HashMap<Card[], Integer> handsInGame = train.getHandsInGame();
-
-        int count = 0;
-        for (HashMap.Entry<Card[], Integer> entry : handsInGame.entrySet()) {
-          Card[] hand = entry.getKey();
-          int numPlays = entry.getValue();
-
-          String encoding = WetDogPlayer.getHandEncoding(hand, numPlays);
-          System.out.println("encoding: " + encoding);
-          System.out.println("move: " + numPlays);
-          System.out.println("score: " + score + "\n");
-          Heuristic h = heuristicMap.putIfAbsent(encoding, new Heuristic(score));
-          if (h != null) {
-            h.addScore(score);
-            heuristicMap.replace(encoding, h);
-          }
-        }
-      }
-
-      int i = 0;
-      HashMap<String, Double> heuristicScores = new HashMap<String, Double>();
-      for (HashMap.Entry<String, Heuristic> entry : heuristicMap.entrySet()) {
-        String encoding = entry.getKey();
-        double score = entry.getValue().getScore();
-        heuristicScores.put(encoding, score);
-        i++;
-      }
-      WetDogPlayer.saveEncoding(heuristicScores, WetDogPlayer.FILENAME);
-      System.out.println("encodings: " + i);
-      System.out.println("max score: " + maxScore);
+    PokerSquares ps = new PokerSquares(train, system);
+    if (args.length < 1) {
+      System.out.println("not enough arguments");
+      return;
     }
+
+    double minutes = Double.parseDouble(args[0]);
+    double seconds = minutes * 60;
+    long millis = (long) seconds * 1000;
+    while (millis > 0) {
+      long startTime = System.currentTimeMillis();
+      int score = ps.play();
+      if (score > maxScore) {
+        maxScore = score;
+      }
+
+      Vector<String> handsInGame = train.getHandsInGame();
+      for (String handEncoding : handsInGame) {
+        Heuristic handHeuristic = handEncodings.putIfAbsent(handEncoding, new Heuristic(score));
+        if (handHeuristic != null) {
+          handHeuristic.addScore(score);
+          handEncodings.replace(handEncoding, handHeuristic);
+        }
+      }
+      long endTime = System.currentTimeMillis();
+      millis -= (endTime - startTime);
+      System.out.printf("time left: %.1fs    encodings: %d             \r", (millis / 1000.0), handEncodings.size());
+    }
+    System.out.println();
+
+    HashMap<String, Double> encodingScores = new HashMap<String, Double>();
+    int i = 0;
+    for (HashMap.Entry<String, Heuristic> entry : handEncodings.entrySet()) {
+      i++;
+      String encoding = entry.getKey();
+      Double score = entry.getValue().getScore();
+      encodingScores.put(encoding, score);
+    }
+    WetDogPlayer.saveEncoding(encodingScores, WetDogPlayer.FILENAME);
+    System.out.println("encodings: " + i);
+    System.out.println("max score: " + maxScore);
   }
 }
