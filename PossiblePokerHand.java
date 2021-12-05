@@ -8,8 +8,8 @@ import java.util.Random;
  * @author James Israelson
  */
 public enum PossiblePokerHand {
-	HIGH_CARD(0, "high card"), ONE_PAIR(1, "one pair"), TWO_PAIR(2, "two pair"), THREE_OF_A_KIND(3, "three of a kind"),
-	STRAIGHT(4, "straight"), FLUSH(5, "flush"), FULL_HOUSE(6, "full house"), FOUR_OF_A_KIND(7, "four of a kind"),
+	ONE_PAIR(1, "one pair"), TWO_PAIR(2, "two pair"), THREE_OF_A_KIND(3, "three of a kind"), STRAIGHT(4, "straight"),
+	FLUSH(5, "flush"), FULL_HOUSE(6, "full house"), FOUR_OF_A_KIND(7, "four of a kind"),
 	STRAIGHT_FLUSH(8, "straight flush");
 
 	public static final int NUM_HANDS = PossiblePokerHand.values().length;
@@ -146,11 +146,10 @@ public enum PossiblePokerHand {
 		}
 
 		if (flushPossible) {
-			if (straightPossible) {
-				list[listCount] = PossiblePokerHand.STRAIGHT_FLUSH; // Straight Flush
-				listCount++;
-			}
-		} else if (straightPossible) {
+			list[listCount] = PossiblePokerHand.FLUSH;
+			listCount++;
+		}
+		if (straightPossible) {
 			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
 			listCount++;
 		}
@@ -160,6 +159,10 @@ public enum PossiblePokerHand {
 		}
 		if (fullHousePossible) {
 			list[listCount] = PossiblePokerHand.FULL_HOUSE; // Full House
+			listCount++;
+		}
+		if (numCards - maxOfAKind <= 2) {
+			list[listCount] = PossiblePokerHand.THREE_OF_A_KIND;
 			listCount++;
 		}
 		// TODO: decide if i want to track less than a straight

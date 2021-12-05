@@ -164,7 +164,6 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		} else { // up to the non-zero depth limit or to game end, iteratively make the given
 							// number of random plays
 			double score = Double.MIN_VALUE;
-			double maxScore = Double.MIN_VALUE;
 			int depth = Math.min(depthLimit, NUM_POS - numPlays); // compute real depth limit, taking into account game end
 			for (int d = 0; d < depth; d++) {
 				// generate a random card draw
@@ -276,7 +275,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	public static void main(String[] args) {
 		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
 		System.out.println(system);
-		new PokerSquares(new WetDogPlayer(3), system).play(); // play a single game
+		new PokerSquares(new WetDogPlayer(7), system).play(); // play a single game
 	}
 
 	public static void saveEncoding(HashMap<String, Double> encoding, String path) {
@@ -311,16 +310,18 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
 
 		for (PossiblePokerHand possibleHand : possibleHands) {
-			if (possibleHand == PossiblePokerHand.STRAIGHT_FLUSH) {
+			if (possibleHand == PossiblePokerHand.FLUSH) {
 				String s = "f";
-				if (achievedHand == PokerHand.STRAIGHT_FLUSH || achievedHand == PokerHand.ROYAL_FLUSH) {
+				if (achievedHand == PokerHand.FLUSH || achievedHand == PokerHand.ROYAL_FLUSH
+						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
 			}
 			if (possibleHand == PossiblePokerHand.STRAIGHT) {
 				String s = "s";
-				if (achievedHand == PokerHand.STRAIGHT) {
+				if (achievedHand == PokerHand.STRAIGHT || achievedHand == PokerHand.ROYAL_FLUSH
+						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
@@ -333,8 +334,15 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 				encoding += s;
 			}
 			if (possibleHand == PossiblePokerHand.FOUR_OF_A_KIND) {
-				String s = "k";
+				String s = "o";
 				if (achievedHand == PokerHand.FOUR_OF_A_KIND) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+			if (achievedHand == PokerHand.ONE_PAIR) {
+				String s = "p";
+				if (achievedHand == PokerHand.TWO_PAIR) {
 					s = s.toUpperCase();
 				}
 				encoding += s;
