@@ -118,6 +118,8 @@ public class TestPlayer implements PokerSquaresPlayer {
     long millis = (long) seconds * 1000;
     while (millis > 0) {
       long startTime = System.currentTimeMillis();
+      System.out.printf("time left: %.1fs    encodings: %d             \r", (millis / 1000.0), handEncodings.size());
+
       int score = ps.play();
       if (score > maxScore) {
         maxScore = score;
@@ -133,7 +135,6 @@ public class TestPlayer implements PokerSquaresPlayer {
       }
       long endTime = System.currentTimeMillis();
       millis -= (endTime - startTime);
-      System.out.printf("time left: %.1fs    encodings: %d             \r", (millis / 1000.0), handEncodings.size());
     }
     System.out.println();
 

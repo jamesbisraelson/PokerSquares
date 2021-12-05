@@ -146,7 +146,7 @@ public class PokerSquares {
 	 * @return integer array of game scores
 	 */
 	public int[] playSequence(int numGames, long startSeed, boolean verbose) {
-		this.verbose = false;
+		this.verbose = verbose;
 		if (verbose) {
 			System.out.printf("%d games starting at seed %d\nPoint system:\n%s\n", numGames, startSeed, system);
 		}
@@ -274,15 +274,15 @@ public class PokerSquares {
 		System.out.println("\n\nTournament evaluation demo:");
 
 		ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
-		players.add(new RandomMCPlayer());
-		players.add(new WetDogPlayer(3));
-		players.add(new WetDogPlayer(4));
-		players.add(new WetDogPlayer(7));
+		players.add(new RandomPlayer());
 
 		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
-		PokerSquaresPointSystem.setSeed(19L);
+		PokerSquaresPointSystem.setSeed(42L);
 		systems.add(PokerSquaresPointSystem.getBritishPointSystem());
+		systems.add(PokerSquaresPointSystem.getAmericanPointSystem());
+		systems.add(PokerSquaresPointSystem.getSingleHandPointSystem(PokerHand.FLUSH.id)); // 1 point for flushes, 0 for all
+																																												// other hands
 
-		PokerSquares.playTournament(players, systems, 10, 0L); // play 20 games for each player under each scoring system
+		PokerSquares.playTournament(players, systems, 20, 0L); // play 20 games for each player under each scoring system
 	}
 }
