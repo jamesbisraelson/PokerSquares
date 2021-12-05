@@ -309,10 +309,11 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 		PokerHand achievedHand = PokerHand.getPokerHand(hand);
 		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
 
-		/*
-		 * if (achievedHand == PokerHand.ONE_PAIR) { encoding += "p"; } else if
-		 * (achievedHand == PokerHand.TWO_PAIR) { encoding += "P"; }
-		 */
+		if (achievedHand == PokerHand.ONE_PAIR) {
+			encoding += "p";
+		} else if (achievedHand == PokerHand.TWO_PAIR) {
+			encoding += "P";
+		}
 
 		for (PossiblePokerHand possibleHand : possibleHands) {
 			if (possibleHand == PossiblePokerHand.FLUSH) {
@@ -345,6 +346,19 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 				}
 				encoding += s;
 			}
+			String s = "";
+			if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_1) {
+				s = "(1)";
+			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_2) {
+				s = "(2)";
+			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_3) {
+				s = "(3)";
+			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_4) {
+				s = "(4)";
+			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_5) {
+				s = "(5)";
+			}
+			encoding += s;
 		}
 		return encoding;
 	}

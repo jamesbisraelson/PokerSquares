@@ -10,7 +10,9 @@ import java.util.Random;
 public enum PossiblePokerHand {
 	ONE_PAIR(1, "one pair"), TWO_PAIR(2, "two pair"), THREE_OF_A_KIND(3, "three of a kind"), STRAIGHT(4, "straight"),
 	FLUSH(5, "flush"), FULL_HOUSE(6, "full house"), FOUR_OF_A_KIND(7, "four of a kind"),
-	STRAIGHT_FLUSH(8, "straight flush");
+	STRAIGHT_FLUSH(8, "straight flush"), CARD_NO_PAIR_1(9, "1 card with no pair"),
+	CARD_NO_PAIR_2(10, "2 cards with no pairs"), CARD_NO_PAIR_3(11, "3 cards with no pairs"),
+	CARD_NO_PAIR_4(12, "4 cards with no pairs"), CARD_NO_PAIR_5(13, "5 cards with no pairs");
 
 	public static final int NUM_HANDS = PossiblePokerHand.values().length;
 	public int id;
@@ -147,7 +149,6 @@ public enum PossiblePokerHand {
 
 		if (flushPossible) {
 			list[listCount] = PossiblePokerHand.FLUSH;
-			listCount++;
 		}
 		if (straightPossible) {
 			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
@@ -165,7 +166,30 @@ public enum PossiblePokerHand {
 			list[listCount] = PossiblePokerHand.THREE_OF_A_KIND;
 			listCount++;
 		}
-		// TODO: decide if i want to track less than a straight
+
+		switch (rankCountCounts[1]) {
+		case 1:
+			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_1;
+			listCount++;
+			break;
+		case 2:
+			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_2;
+			listCount++;
+			break;
+		case 3:
+			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_3;
+			listCount++;
+			break;
+		case 4:
+			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_4;
+			listCount++;
+			break;
+		case 5:
+			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_5;
+			listCount++;
+			break;
+		}
+
 		return list;
 	}
 
