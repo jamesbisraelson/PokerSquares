@@ -274,14 +274,14 @@ public class PokerSquares {
 		System.out.println("\n\nTournament evaluation demo:");
 
 		ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
-		players.add(new RandomPlayer());
+		players.add(new RandomMCPlayer());
+		players.add(new WetDogPlayer(2));
+		players.add(new WetDogPlayer(3));
+		players.add(new WetDogPlayer(10));
 
 		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
 		PokerSquaresPointSystem.setSeed(42L);
 		systems.add(PokerSquaresPointSystem.getBritishPointSystem());
-		systems.add(PokerSquaresPointSystem.getAmericanPointSystem());
-		systems.add(PokerSquaresPointSystem.getSingleHandPointSystem(PokerHand.FLUSH.id)); // 1 point for flushes, 0 for all
-																																												// other hands
 
 		PokerSquares.playTournament(players, systems, 20, 0L); // play 20 games for each player under each scoring system
 	}
