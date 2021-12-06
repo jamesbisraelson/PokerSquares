@@ -317,7 +317,6 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 
 		for (PossiblePokerHand possibleHand : possibleHands) {
 			if (possibleHand == PossiblePokerHand.FLUSH) {
-				System.out.println("gay");
 				String s = "f";
 				if (achievedHand == PokerHand.FLUSH || achievedHand == PokerHand.ROYAL_FLUSH
 						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
