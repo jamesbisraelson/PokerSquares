@@ -149,6 +149,7 @@ public enum PossiblePokerHand {
 
 		if (flushPossible) {
 			list[listCount] = PossiblePokerHand.FLUSH;
+			listCount++;
 		}
 		if (straightPossible) {
 			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
