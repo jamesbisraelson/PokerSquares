@@ -30,7 +30,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	// positions.
 	private int numPlays = 0; // number of Cards played into the grid so far
 	private PokerSquaresPointSystem system; // point system
-	private int depthLimit = 3; // default depth limit for Random Monte Carlo (MC) play
+	private int depthLimit = 10; // default depth limit for Random Monte Carlo (MC) play
 	private Card[][] grid = new Card[SIZE][SIZE]; // grid with Card objects or null (for empty positions)
 	private Card[] simDeck = Card.getAllCards(); // a list of all Cards. As we learn the index of cards in the play deck,
 																								// we swap each dealt card to its correct index. Thus, from index
@@ -275,7 +275,7 @@ public class WetDogPlayer implements PokerSquaresPlayer {
 	public static void main(String[] args) {
 		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
 		System.out.println(system);
-		new PokerSquares(new WetDogPlayer(7), system).play(); // play a single game
+		new PokerSquares(new WetDogPlayer(), system).play(); // play a single game
 	}
 
 	public static void saveEncoding(HashMap<String, Double> encoding, String path) {
