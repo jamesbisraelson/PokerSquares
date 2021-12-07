@@ -191,7 +191,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 	 */
 	@Override
 	public String getName() {
-		return "JamesIsraelsonPlayer";
+		return "JamesIsraelson3632260";
 	}
 
 	/*
