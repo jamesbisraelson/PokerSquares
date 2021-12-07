@@ -5,8 +5,8 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Trainer: A PokerSquaresPlayer that simulates random games and stores every
- * hand encountered in the game into a Vector<String>.
+ * JIsraelsonTrainer: A PokerSquaresPlayer that simulates random games and
+ * stores every hand encountered in the game into a Vector<String>.
  *
  * Some of the code in this file is adopted from the RandomPlayer that was
  * supplied as an example.
@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @author James Israelson
  * @author Todd W. Neller [getPlay(), init()]
  */
-public class Trainer implements PokerSquaresPlayer {
+public class JIsraelsonTrainer implements PokerSquaresPlayer {
   private Vector<String> handsInGame = new Vector<String>();
   private final int SIZE = 5;
   private Card[][] grid = new Card[SIZE][SIZE];
@@ -68,13 +68,13 @@ public class Trainer implements PokerSquaresPlayer {
   }
 
   /*
-   * Get the name for the Trainer
+   * Get the name for the JIsraelsonTrainer
    *
    * @return The name for the player.
    */
   @Override
   public String getName() {
-    return "Trainer";
+    return "JIsraelsonTrainer";
   }
 
   /*
@@ -105,7 +105,7 @@ public class Trainer implements PokerSquaresPlayer {
    * @param numPlays The current number of plays in the game
    */
   private void storeHand(Card[] hand, int numPlays) {
-    String encoding = JamesIsraelsonPlayer.getHandEncoding(hand, numPlays);
+    String encoding = JIsraelsonPlayer.getHandEncoding(hand, numPlays);
     this.handsInGame.add(encoding);
   }
 
@@ -121,7 +121,7 @@ public class Trainer implements PokerSquaresPlayer {
   /*
    * Runs simulations of games repeatedly until a timer is up. Every hand in the
    * game is encoded into a String, and saved with its average score at the end of
-   * the game into a file specified by JamesIsraelsonPlayer.FILENAME.
+   * the game into a file specified by JIsraelsonPlayer.FILENAME.
    *
    * @param args The first argument is used as the minutes to run the simulataions
    */
@@ -134,7 +134,7 @@ public class Trainer implements PokerSquaresPlayer {
     HashMap<String, Heuristic> handEncodings = new HashMap<String, Heuristic>();
 
     // Create the trainer and set up the game.
-    Trainer train = new Trainer();
+    JIsraelsonTrainer train = new JIsraelsonTrainer();
     PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
     PokerSquares ps = new PokerSquares(train, system);
 
@@ -195,8 +195,8 @@ public class Trainer implements PokerSquaresPlayer {
       encodingScores.put(encoding, score);
     }
 
-    // Save the encoding to a file specified by JamesIsraelsonPlayer.FILENAME
-    JamesIsraelsonPlayer.saveEncoding(encodingScores, JamesIsraelsonPlayer.FILENAME);
+    // Save the encoding to a file specified by JIsraelsonPlayer.FILENAME
+    JIsraelsonPlayer.saveEncoding(encodingScores, JIsraelsonPlayer.FILENAME);
 
     // Print the stats for the simulations
     System.out.println("encodings: " + i);

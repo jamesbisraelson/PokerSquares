@@ -1,8 +1,8 @@
 import java.util.Random;
 
 /**
- * PossiblePokerHand: This enum signifies the possible poker hands for my
- * heuristic. Each possible poker hand has a name and an id. This is used in
+ * JIsraelsonPossiblePokerHand: This enum signifies the possible poker hands for
+ * my heuristic. Each possible poker hand has a name and an id. This is used in
  * determining the heuristic function for the Monte Carlo search.
  *
  * The enum is quite similar to PokerHand, but the methods are quite different.
@@ -11,18 +11,18 @@ import java.util.Random;
  * @author James Israelson
  * @author Todd W. Neller (parts of enum)
  */
-public enum PossiblePokerHand {
+public enum JIsraelsonPossiblePokerHand {
 	ONE_PAIR(1, "one pair"), TWO_PAIR(2, "two pair"), THREE_OF_A_KIND(3, "three of a kind"), STRAIGHT(4, "straight"),
 	FLUSH(5, "flush"), FULL_HOUSE(6, "full house"), FOUR_OF_A_KIND(7, "four of a kind"),
 	STRAIGHT_FLUSH(8, "straight flush"), CARD_NO_PAIR_1(9, "1 card with no pair"),
 	CARD_NO_PAIR_2(10, "2 cards with no pairs"), CARD_NO_PAIR_3(11, "3 cards with no pairs"),
 	CARD_NO_PAIR_4(12, "4 cards with no pairs"), CARD_NO_PAIR_5(13, "5 cards with no pairs");
 
-	public static final int NUM_HANDS = PossiblePokerHand.values().length;
+	public static final int NUM_HANDS = JIsraelsonPossiblePokerHand.values().length;
 	public int id;
 	public String name;
 
-	PossiblePokerHand(int id, String name) {
+	JIsraelsonPossiblePokerHand(int id, String name) {
 		this.id = id;
 		this.name = name;
 	}
@@ -33,16 +33,17 @@ public enum PossiblePokerHand {
 
 	/**
 	 * Given a Card array (with no more than 4 Cards in it), return an array of
-	 * PossiblePokerHands. Some code was inspired from getPokerHand() in PokerHand
+	 * JIsraelsonPossiblePokerHands. Some code was inspired from getPokerHand() in
+	 * PokerHand
 	 *
 	 * @param hand A Possible Poker hand represented as an array of Card objects
 	 *             which may contain null values
 	 * @return Classification of the given Poker hand
 	 */
-	public static PossiblePokerHand[] getPossiblePokerHands(Card[] hand) {
+	public static JIsraelsonPossiblePokerHand[] getPossiblePokerHands(Card[] hand) {
 		// The first part of the method is inspired by getPokerHand()
 		int numCards = 0;
-		PossiblePokerHand[] list = new PossiblePokerHand[PossiblePokerHand.NUM_HANDS];
+		JIsraelsonPossiblePokerHand[] list = new JIsraelsonPossiblePokerHand[JIsraelsonPossiblePokerHand.NUM_HANDS];
 		int listCount = 0;
 
 		int[] rankCounts = new int[Card.NUM_RANKS];
@@ -155,53 +156,53 @@ public enum PossiblePokerHand {
 			fullHousePossible = true;
 		}
 
-		// Add PossiblePokerHands to array.
+		// Add JIsraelsonPossiblePokerHands to array.
 		// Flush
 		if (flushPossible) {
-			list[listCount] = PossiblePokerHand.FLUSH;
+			list[listCount] = JIsraelsonPossiblePokerHand.FLUSH;
 			listCount++;
 		}
 		// Straight
 		if (straightPossible) {
-			list[listCount] = PossiblePokerHand.STRAIGHT;
+			list[listCount] = JIsraelsonPossiblePokerHand.STRAIGHT;
 			listCount++;
 		}
 		// Four of a kind
 		if (numCards - maxOfAKind <= 1) {
-			list[listCount] = PossiblePokerHand.FOUR_OF_A_KIND;
+			list[listCount] = JIsraelsonPossiblePokerHand.FOUR_OF_A_KIND;
 			listCount++;
 		}
 		// Full house
 		if (fullHousePossible) {
-			list[listCount] = PossiblePokerHand.FULL_HOUSE;
+			list[listCount] = JIsraelsonPossiblePokerHand.FULL_HOUSE;
 			listCount++;
 		}
 		// Three of a kind
 		if (numCards - maxOfAKind <= 2) {
-			list[listCount] = PossiblePokerHand.THREE_OF_A_KIND;
+			list[listCount] = JIsraelsonPossiblePokerHand.THREE_OF_A_KIND;
 			listCount++;
 		}
 
 		// Add the number of cards with no pairs to the array
 		switch (rankCountCounts[1]) {
 		case 1:
-			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_1;
+			list[listCount] = JIsraelsonPossiblePokerHand.CARD_NO_PAIR_1;
 			listCount++;
 			break;
 		case 2:
-			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_2;
+			list[listCount] = JIsraelsonPossiblePokerHand.CARD_NO_PAIR_2;
 			listCount++;
 			break;
 		case 3:
-			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_3;
+			list[listCount] = JIsraelsonPossiblePokerHand.CARD_NO_PAIR_3;
 			listCount++;
 			break;
 		case 4:
-			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_4;
+			list[listCount] = JIsraelsonPossiblePokerHand.CARD_NO_PAIR_4;
 			listCount++;
 			break;
 		case 5:
-			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_5;
+			list[listCount] = JIsraelsonPossiblePokerHand.CARD_NO_PAIR_5;
 			listCount++;
 			break;
 		}

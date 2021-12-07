@@ -9,11 +9,10 @@ import java.io.IOException;
 import java.lang.ClassNotFoundException;
 
 /**
- * JamesIsraelsonPlayer: A simple Monte Carlo approach to a PokerSquares player.
- * The player simulates random playouts after each potential move down to a
- * depth of 3, and averages those playouts to a score that is decided by a
- * heuristic. The player then selects the play that gets the highest heuristic
- * score.
+ * JIsraelsonPlayer: A simple Monte Carlo approach to a PokerSquares player. The
+ * player simulates random playouts after each potential move down to a depth of
+ * 3, and averages those playouts to a score that is decided by a heuristic. The
+ * player then selects the play that gets the highest heuristic score.
  *
  * The Monte Carlo simulation approach was adopted from the RandomMCPlayer that
  * was supplied, but all of the code for the heuristic and the heuristic's
@@ -24,7 +23,7 @@ import java.lang.ClassNotFoundException;
  * @author Todd W. Neller (Original)
  * @author Michael W. Fleming (Modifications)
  */
-public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
+public class JIsraelsonPlayer implements PokerSquaresPlayer {
 	// Unchaged from the RandomMCPlayer:
 	private final int SIZE = 5;
 	private final int NUM_POS = SIZE * SIZE;
@@ -41,7 +40,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 	// Variables that I added:
 
 	// The filename for the heuristic
-	public static final String FILENAME = "heuristic.wet";
+	public static final String FILENAME = "JIsraelsonHeuristic.obj";
 	// The hashmap in which the heuristic's values are stored
 	private HashMap<String, Double> heuristic;
 
@@ -50,10 +49,10 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 	// I have noted in comments where I made modifications.
 	/****************************************************************/
 
-	public JamesIsraelsonPlayer() {
+	public JIsraelsonPlayer() {
 	}
 
-	public JamesIsraelsonPlayer(int depthLimit) {
+	public JIsraelsonPlayer(int depthLimit) {
 		this.depthLimit = depthLimit;
 	}
 
@@ -185,13 +184,13 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 	/****************************************************************/
 
 	/*
-	 * Get the name for the JamesIsraelsonPlayer
+	 * Get the name for the JIsraelsonPlayer
 	 *
 	 * @return The name for the player.
 	 */
 	@Override
 	public String getName() {
-		return "JamesIsraelson3632260";
+		return "JIsraelsonPlayer";
 	}
 
 	/*
@@ -202,7 +201,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 	public static void main(String[] args) {
 		PokerSquaresPointSystem system = PokerSquaresPointSystem.getBritishPointSystem();
 		System.out.println(system);
-		new PokerSquares(new JamesIsraelsonPlayer(), system).play();
+		new PokerSquares(new JIsraelsonPlayer(), system).play();
 	}
 
 	/*
@@ -281,7 +280,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 		PokerHand achievedHand = PokerHand.getPokerHand(hand);
 
 		// Get the PossiblePokerHands for the hand.
-		PossiblePokerHand[] possibleHands = PossiblePokerHand.getPossiblePokerHands(hand);
+		JIsraelsonPossiblePokerHand[] possibleHands = JIsraelsonPossiblePokerHand.getPossiblePokerHands(hand);
 
 		// Add the number of plays to the beginning of the encoding.
 		String encoding = numPlays + ":";
@@ -294,10 +293,10 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 		}
 
 		// Iterate through the PossiblePokerHands for the hand.
-		for (PossiblePokerHand possibleHand : possibleHands) {
+		for (JIsraelsonPossiblePokerHand possibleHand : possibleHands) {
 
 			// If a flush is possible, add a 'f'. If a flush has been acheived, add a 'F'.
-			if (possibleHand == PossiblePokerHand.FLUSH) {
+			if (possibleHand == JIsraelsonPossiblePokerHand.FLUSH) {
 				String s = "f";
 				if (achievedHand == PokerHand.FLUSH || achievedHand == PokerHand.ROYAL_FLUSH
 						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
@@ -308,7 +307,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 
 			// If a straight is possible, add an 's'. If a straight has been acheived, add
 			// an 'S'.
-			if (possibleHand == PossiblePokerHand.STRAIGHT) {
+			if (possibleHand == JIsraelsonPossiblePokerHand.STRAIGHT) {
 				String s = "s";
 				if (achievedHand == PokerHand.STRAIGHT || achievedHand == PokerHand.ROYAL_FLUSH
 						|| achievedHand == PokerHand.STRAIGHT_FLUSH) {
@@ -319,7 +318,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 
 			// If a full house is possible, add an 'h'. If a full house has been acheived,
 			// add an 'H'.
-			if (possibleHand == PossiblePokerHand.FULL_HOUSE) {
+			if (possibleHand == JIsraelsonPossiblePokerHand.FULL_HOUSE) {
 				String s = "h";
 				if (achievedHand == PokerHand.FULL_HOUSE) {
 					s = s.toUpperCase();
@@ -329,7 +328,7 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 
 			// If a four of a kind is possible, add an 'o'. If a four of a kind has been
 			// acheived, add an 'O'.
-			if (possibleHand == PossiblePokerHand.FOUR_OF_A_KIND) {
+			if (possibleHand == JIsraelsonPossiblePokerHand.FOUR_OF_A_KIND) {
 				String s = "o";
 				if (achievedHand == PokerHand.FOUR_OF_A_KIND) {
 					s = s.toUpperCase();
@@ -339,15 +338,15 @@ public class JamesIsraelsonPlayer implements PokerSquaresPlayer {
 
 			// Add the number of cards with no pairs to the end of the encoding.
 			String s = "";
-			if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_1) {
+			if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_1) {
 				s = "(1)";
-			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_2) {
+			} else if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_2) {
 				s = "(2)";
-			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_3) {
+			} else if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_3) {
 				s = "(3)";
-			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_4) {
+			} else if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_4) {
 				s = "(4)";
-			} else if (possibleHand == PossiblePokerHand.CARD_NO_PAIR_5) {
+			} else if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_5) {
 				s = "(5)";
 			}
 			encoding += s;
