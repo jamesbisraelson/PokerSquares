@@ -1,11 +1,15 @@
 import java.util.Random;
 
 /**
- * PossiblePokerHand: This enum signifies the possible poker hands. Each
- * possible poker hand has a name and an id. This is used in determining the
- * heuristic function for the Monte Carlo search.
+ * PossiblePokerHand: This enum signifies the possible poker hands for my
+ * heuristic. Each possible poker hand has a name and an id. This is used in
+ * determining the heuristic function for the Monte Carlo search.
+ *
+ * The enum is quite similar to PokerHand, but the methods are quite different.
+ *
  *
  * @author James Israelson
+ * @author Todd W. Neller (parts of enum)
  */
 public enum PossiblePokerHand {
 	ONE_PAIR(1, "one pair"), TWO_PAIR(2, "two pair"), THREE_OF_A_KIND(3, "three of a kind"), STRAIGHT(4, "straight"),
@@ -23,16 +27,20 @@ public enum PossiblePokerHand {
 		this.name = name;
 	}
 
+	public String toString() {
+		return name;
+	}
+
 	/**
 	 * Given a Card array (with no more than 4 Cards in it), return an array of
-	 * PossiblePokerHands. Some code has been copied from getPokerHand() in
-	 * PokerHand.java
+	 * PossiblePokerHands. Some code was inspired from getPokerHand() in PokerHand
 	 *
-	 * @param hand - a Possible Poker hand represented as an array of Card objects
+	 * @param hand A Possible Poker hand represented as an array of Card objects
 	 *             which may contain null values
-	 * @return classification of the given Poker hand
+	 * @return Classification of the given Poker hand
 	 */
 	public static PossiblePokerHand[] getPossiblePokerHands(Card[] hand) {
+		// The first part of the method is inspired by getPokerHand()
 		int numCards = 0;
 		PossiblePokerHand[] list = new PossiblePokerHand[PossiblePokerHand.NUM_HANDS];
 		int listCount = 0;
@@ -42,7 +50,6 @@ public enum PossiblePokerHand {
 
 		// Compute counts
 		for (Card card : hand) {
-
 			if (card != null) {
 				numCards++;
 				rankCounts[card.getRank()]++;
@@ -59,6 +66,8 @@ public enum PossiblePokerHand {
 				maxOfAKind = count;
 			}
 		}
+
+		// After this point, it is all my own code.
 
 		// Flush check
 		boolean flushPossible = false;
@@ -87,14 +96,13 @@ public enum PossiblePokerHand {
 			highRank--;
 		}
 
-		// check if straight
 		if (highRank - lowRank > 0) {
 			if (highRank - lowRank < PokerSquares.SIZE) {
 				straightPossible = true;
 			}
 		}
 
-		// check if ace high straight
+		// Check if ace high straight
 		if ((rankCounts[0] == 1)
 				&& (rankCounts[12] == 1 || rankCounts[11] == 1 || rankCounts[10] == 1 || rankCounts[9] == 1)) {
 
@@ -113,61 +121,68 @@ public enum PossiblePokerHand {
 			}
 		}
 
-		// full house check
+		// Full house check
 		boolean fullHousePossible = false;
 		switch (numCards) {
 		case 5:
-			// full house
+			// Full house
 			if (rankCountCounts[3] == 1 && rankCountCounts[2] == 1) {
 				fullHousePossible = true;
 			}
 			break;
 		case 4:
-			// three of a kind and another card
+			// Three of a kind and another card
 			if ((rankCountCounts[3] == 1 && rankCountCounts[1] == 1)) {
 				fullHousePossible = true;
 			}
-			// two pairs
+			// Two pairs
 			else if (rankCountCounts[2] == 2) {
 				fullHousePossible = true;
 			}
 			break;
 		case 3:
-			// three of a kind
+			// Three of a kind
 			if (rankCountCounts[3] == 1) {
 				fullHousePossible = true;
 			}
-			// a pair and another card
+			// A pair and another card
 			else if (rankCountCounts[2] == 1) {
 				fullHousePossible = true;
 			}
 			break;
 		default:
-			// two, 1, or zero cards are always eligible for a full house
+			// 2, 1, or 0 cards are always eligible for a full house
 			fullHousePossible = true;
 		}
 
+		// Add PossiblePokerHands to array.
+		// Flush
 		if (flushPossible) {
 			list[listCount] = PossiblePokerHand.FLUSH;
 			listCount++;
 		}
+		// Straight
 		if (straightPossible) {
-			list[listCount] = PossiblePokerHand.STRAIGHT; // Straight
+			list[listCount] = PossiblePokerHand.STRAIGHT;
 			listCount++;
 		}
+		// Four of a kind
 		if (numCards - maxOfAKind <= 1) {
-			list[listCount] = PossiblePokerHand.FOUR_OF_A_KIND; // Four of a Kind
+			list[listCount] = PossiblePokerHand.FOUR_OF_A_KIND;
 			listCount++;
 		}
+		// Full house
 		if (fullHousePossible) {
-			list[listCount] = PossiblePokerHand.FULL_HOUSE; // Full House
+			list[listCount] = PossiblePokerHand.FULL_HOUSE;
 			listCount++;
 		}
+		// Three of a kind
 		if (numCards - maxOfAKind <= 2) {
 			list[listCount] = PossiblePokerHand.THREE_OF_A_KIND;
 			listCount++;
 		}
 
+		// Add the number of cards with no pairs to the array
 		switch (rankCountCounts[1]) {
 		case 1:
 			list[listCount] = PossiblePokerHand.CARD_NO_PAIR_1;
@@ -192,14 +207,5 @@ public enum PossiblePokerHand {
 		}
 
 		return list;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Enum#toString()
-	 */
-	public String toString() {
-		return name;
 	}
 }

@@ -274,11 +274,7 @@ public class PokerSquares {
 		System.out.println("\n\nTournament evaluation demo:");
 
 		ArrayList<PokerSquaresPlayer> players = new ArrayList<PokerSquaresPlayer>();
-		players.add(new WetDogPlayer(9));
-		players.add(new WetDogPlayer(10));
-		players.add(new WetDogPlayer(11));
-		players.add(new WetDogPlayer(12));
-		players.add(new WetDogPlayer(13));
+		players.add(new JamesIsraelsonPlayer(3));
 		players.add(new RandomMCPlayer(2));
 
 		ArrayList<PokerSquaresPointSystem> systems = new ArrayList<PokerSquaresPointSystem>();
