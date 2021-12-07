@@ -10,7 +10,7 @@ public class Test {
       System.out.println(hand[i]);
     }
 
-    String e = JamesIsraelsonPlayer.getHandEncoding(hand, 0);
+    String e = JIsraelsonPlayer.getHandEncoding(hand, 0);
     System.out.println(e);
   }
 }
