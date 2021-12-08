@@ -336,6 +336,14 @@ public class JIsraelsonPlayer implements PokerSquaresPlayer {
 				encoding += s;
 			}
 
+			if (possibleHand == JIsraelsonPossiblePokerHand.THREE_OF_A_KIND) {
+				String s = "e";
+				if (achievedHand == PokerHand.THREE_OF_A_KIND) {
+					s = s.toUpperCase();
+				}
+				encoding += s;
+			}
+
 			// Add the number of cards with no pairs to the end of the encoding.
 			String s = "";
 			if (possibleHand == JIsraelsonPossiblePokerHand.CARD_NO_PAIR_1) {
